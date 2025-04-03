@@ -3,14 +3,16 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+// TODO read from env.json
+
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1
-    contractName: 'MyEndpointV1OFTV2Mock', // Update this if trying out the other contracts
+    address: '0xBF1a16F814160d3C3174aa15D153c55605B7ea1D', // CrossChainBridge on Sepolia
 }
 
 const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
-    address: '', // NOTE: update this with the OFTStore address.
+    address: '2C6cFDf4FQPrFvAJKJ2B4ob3nZ1GmXfSjUAgeauT3VVm',
 }
 
 // The values here are for development purposes. E.g. confirmations are set to 1. For production, they should be reviewed and edited accordingly.
