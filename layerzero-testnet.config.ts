@@ -7,7 +7,7 @@ import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/tool
 
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1
-    address: '0xBF1a16F814160d3C3174aa15D153c55605B7ea1D', // CrossChainBridge on Sepolia
+    contractName: 'CrossChainBridge'
 }
 
 const solanaContract: OmniPointHardhat = {

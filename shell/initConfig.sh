@@ -31,21 +31,30 @@ if [ -z "$EID" ]; then
     exit 1
 fi
 
+# Get the layerzero config
+if [ "$network" == "devnet" ]; then
+    LAYERZERO_CONFIG="layerzero-testnet.config.ts"
+elif [ "$network" == "mainnet" ]; then
+    LAYERZERO_CONFIG="layerzero.config.ts"
+else
+    display_error "Invalid network: $network"
+    display_error "Provide the network as --network <devnet|mainnet>"
+    exit 1
+fi
+
 echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  EID: $EID"
+echo "  LayerZero Config: $LAYERZERO_CONFIG"
 echo ""
 
-if [ "$broadcast" == "false" ]; then
+if [ "$broadcast" != "true" ]; then
     echo "Skipping broadcast"
     echo "  To broadcast the transaction, append '--broadcast true' to the command"
     exit 0
 fi
 
-# TODO
-# Fix RPC URL error
-
 pnpm hardhat lz:oft:solana:init-config \
-    --oapp-config layerzero.config.ts \
+    --oapp-config $LAYERZERO_CONFIG \
     --solana-eid $EID

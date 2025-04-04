@@ -1,0 +1,866 @@
+{
+    "address": "0xBF1a16F814160d3C3174aa15D153c55605B7ea1D",
+    "abi": [
+        {
+            "type": "constructor",
+            "inputs": [
+                {
+                    "name": "kernel_",
+                    "type": "address",
+                    "internalType": "contract Kernel"
+                },
+                {
+                    "name": "endpoint_",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "MINTR",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "contract MINTRv1"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "ROLES",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "contract ROLESv1"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "bridgeActive",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "changeKernel",
+            "inputs": [
+                {
+                    "name": "newKernel_",
+                    "type": "address",
+                    "internalType": "contract Kernel"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "configureDependencies",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "dependencies",
+                    "type": "bytes5[]",
+                    "internalType": "Keycode[]"
+                }
+            ],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "estimateSendFee",
+            "inputs": [
+                {
+                    "name": "dstChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "to_",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "adapterParams_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "nativeFee",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "zroFee",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "failedMessages",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "",
+                    "type": "uint64",
+                    "internalType": "uint64"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "forceResumeReceive",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "getConfig",
+            "inputs": [
+                {
+                    "name": "version_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "chainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "configType_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "getTrustedRemoteAddress",
+            "inputs": [
+                {
+                    "name": "remoteChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "isActive",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "isTrustedRemote",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "kernel",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "contract Kernel"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "lzEndpoint",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "contract ILayerZeroEndpoint"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "lzReceive",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "nonce_",
+                    "type": "uint64",
+                    "internalType": "uint64"
+                },
+                {
+                    "name": "payload_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "ohm",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "contract ERC20"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "precrime",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "receiveMessage",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "nonce_",
+                    "type": "uint64",
+                    "internalType": "uint64"
+                },
+                {
+                    "name": "payload_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "requestPermissions",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "permissions",
+                    "type": "tuple[]",
+                    "internalType": "struct Permissions[]",
+                    "components": [
+                        {
+                            "name": "keycode",
+                            "type": "bytes5",
+                            "internalType": "Keycode"
+                        },
+                        {
+                            "name": "funcSelector",
+                            "type": "bytes4",
+                            "internalType": "bytes4"
+                        }
+                    ]
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "retryMessage",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "nonce_",
+                    "type": "uint64",
+                    "internalType": "uint64"
+                },
+                {
+                    "name": "payload_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "payable"
+        },
+        {
+            "type": "function",
+            "name": "sendOhm",
+            "inputs": [
+                {
+                    "name": "dstChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "to_",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "payable"
+        },
+        {
+            "type": "function",
+            "name": "setBridgeStatus",
+            "inputs": [
+                {
+                    "name": "isActive_",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setConfig",
+            "inputs": [
+                {
+                    "name": "version_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "chainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "configType_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "config_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setPrecrime",
+            "inputs": [
+                {
+                    "name": "precrime_",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setReceiveVersion",
+            "inputs": [
+                {
+                    "name": "version_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setSendVersion",
+            "inputs": [
+                {
+                    "name": "version_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setTrustedRemote",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "path_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "setTrustedRemoteAddress",
+            "inputs": [
+                {
+                    "name": "remoteChainId_",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "remoteAddress_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "trustedRemoteLookup",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint16",
+                    "internalType": "uint16"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "event",
+            "name": "BridgeReceived",
+            "inputs": [
+                {
+                    "name": "receiver_",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount_",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "srcChain_",
+                    "type": "uint16",
+                    "indexed": true,
+                    "internalType": "uint16"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "BridgeStatusSet",
+            "inputs": [
+                {
+                    "name": "isActive_",
+                    "type": "bool",
+                    "indexed": false,
+                    "internalType": "bool"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "BridgeTransferred",
+            "inputs": [
+                {
+                    "name": "sender_",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "amount_",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "dstChain_",
+                    "type": "uint16",
+                    "indexed": true,
+                    "internalType": "uint16"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "MessageFailed",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "indexed": false,
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "nonce_",
+                    "type": "uint64",
+                    "indexed": false,
+                    "internalType": "uint64"
+                },
+                {
+                    "name": "payload_",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "reason_",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "RetryMessageSuccess",
+            "inputs": [
+                {
+                    "name": "srcChainId_",
+                    "type": "uint16",
+                    "indexed": false,
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "srcAddress_",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                },
+                {
+                    "name": "nonce_",
+                    "type": "uint64",
+                    "indexed": false,
+                    "internalType": "uint64"
+                },
+                {
+                    "name": "payloadHash_",
+                    "type": "bytes32",
+                    "indexed": false,
+                    "internalType": "bytes32"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "SetMinDstGas",
+            "inputs": [
+                {
+                    "name": "dstChainId_",
+                    "type": "uint16",
+                    "indexed": false,
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "type_",
+                    "type": "uint16",
+                    "indexed": false,
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "_minDstGas",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "SetPrecrime",
+            "inputs": [
+                {
+                    "name": "precrime_",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "SetTrustedRemote",
+            "inputs": [
+                {
+                    "name": "remoteChainId_",
+                    "type": "uint16",
+                    "indexed": false,
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "path_",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "SetTrustedRemoteAddress",
+            "inputs": [
+                {
+                    "name": "remoteChainId_",
+                    "type": "uint16",
+                    "indexed": false,
+                    "internalType": "uint16"
+                },
+                {
+                    "name": "remoteAddress_",
+                    "type": "bytes",
+                    "indexed": false,
+                    "internalType": "bytes"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "error",
+            "name": "Bridge_Deactivated",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_DestinationNotTrusted",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_InsufficientAmount",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_InvalidCaller",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_InvalidMessageSource",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_InvalidPayload",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_NoStoredMessage",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_NoTrustedPath",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "Bridge_TrustedRemoteUninitialized",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "KernelAdapter_OnlyKernel",
+            "inputs": [
+                {
+                    "name": "caller_",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "Policy_ModuleDoesNotExist",
+            "inputs": [
+                {
+                    "name": "keycode_",
+                    "type": "bytes5",
+                    "internalType": "Keycode"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "Policy_WrongModuleVersion",
+            "inputs": [
+                {
+                    "name": "expected_",
+                    "type": "bytes",
+                    "internalType": "bytes"
+                }
+            ]
+        }
+    ]
+}
