@@ -9,3 +9,8 @@ Populate env.json with the values
 
 Update "<network>.oft.oftStore" in env.json with the oftStore value from `deployments/solana-<network>/OFT.json`
 
+`./shell/initConfig.sh` (solana -> destination)
+
+`./shell/wire.sh` (destination -> solana) only if the caller ("bridge_admin") is not an MS
+
+Update the config (e.g. new chains) here: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways
