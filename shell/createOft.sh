@@ -53,12 +53,23 @@ if [ -z "$OWNER" ]; then
     exit 1
 fi
 
+# Define other attributes
+TOKEN_NAME="Olympus"
+TOKEN_SYMBOL="OHM"
+TOKEN_DECIMALS=9
+TOKEN_METADATA_URI="https://raw.githubusercontent.com/OlympusDAO/solanOHM/62f0a01f8b5387d2865e6e84e6da28489dda55b8/assets/metadata.json"
+
 echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  Program ID: $PROGRAM_ID"
 echo "  EID: $EID"
 echo "  Owner: $OWNER"
+echo "  Additional Minters: None"
+echo "  Token Name: $TOKEN_NAME"
+echo "  Token Symbol: $TOKEN_SYMBOL"
+echo "  Token Decimals: $TOKEN_DECIMALS"
+echo "  Token Metadata URI: $TOKEN_METADATA_URI"
 echo ""
 
 if [ "$broadcast" == "false" ]; then
@@ -71,7 +82,8 @@ fi
 pnpm hardhat lz:oft:solana:create \
     --eid $EID \
     --program-id $PROGRAM_ID \
-    --additional-minters $OWNER \
-    --local-decimals 9 \
-    --name "Olympus" \
-    --symbol "OHM"
+    --additional-minters "" \
+    --local-decimals $TOKEN_DECIMALS \
+    --name $TOKEN_NAME \
+    --symbol $TOKEN_SYMBOL \
+    --uri $TOKEN_METADATA_URI
