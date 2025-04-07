@@ -55,6 +55,7 @@ if [ "$broadcast" != "true" ]; then
     exit 0
 fi
 
+echo "Initializing the OFT config"
 pnpm hardhat lz:oft:solana:init-config \
     --oapp-config $LAYERZERO_CONFIG \
     --solana-eid $EID

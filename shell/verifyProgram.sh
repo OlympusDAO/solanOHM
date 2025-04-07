@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Usage: ./shell/createOft.sh
+# Verifies the OFT program on the given network
+# Usage: ./shell/verifyProgram.sh
 #   --network <devnet|mainnet>
 #   [--broadcast <true|false>]
 
@@ -24,6 +25,17 @@ if [ -z "$network" ] || [ "$network" != "devnet" ] && [ "$network" != "mainnet" 
     exit 1
 fi
 
+# Validate the keypair
+KEYPAIR_FILE="~/.config/solana/id.json"
+if [ -n "$keypair" ]; then
+    if [ -f "$keypair" ]; then
+        KEYPAIR_FILE="$keypair"
+    else
+        display_error "Error: Keypair file not found at $keypair"
+        exit 1
+    fi
+fi
+
 # Get the broadcast flag, if defined
 broadcast=${broadcast:-false}
 if [ "$broadcast" != "true" ] && [ "$broadcast" != "false" ]; then
@@ -39,29 +51,22 @@ if [ -z "$PROGRAM_ID" ]; then
     exit 1
 fi
 
-# Get the eid from the environment
-EID=$(jq -r ".${network}.solana.eid" env.json)
-if [ -z "$EID" ]; then
-    display_error "Error: eid is not set for network $network"
+# Set the network flag
+if [ "$network" == "devnet" ]; then
+    NETWORK_FLAG="-ud"
+elif [ "$network" == "mainnet" ]; then
+    NETWORK_FLAG="-um"
+else
+    display_error "Invalid network: $network"
+    display_error "Provide the network as --network <devnet|mainnet>"
     exit 1
 fi
-
-# Define other attributes
-TOKEN_NAME="Olympus"
-TOKEN_SYMBOL="OHM"
-TOKEN_DECIMALS=9
-TOKEN_METADATA_URI="https://raw.githubusercontent.com/OlympusDAO/solanOHM/62f0a01f8b5387d2865e6e84e6da28489dda55b8/assets/metadata.json"
 
 echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  Program ID: $PROGRAM_ID"
-echo "  EID: $EID"
-echo "  Additional Minters: None"
-echo "  Token Name: $TOKEN_NAME"
-echo "  Token Symbol: $TOKEN_SYMBOL"
-echo "  Token Decimals: $TOKEN_DECIMALS"
-echo "  Token Metadata URI: $TOKEN_METADATA_URI"
+echo "  Keypair: $KEYPAIR_FILE"
 echo ""
 
 if [ "$broadcast" != "true" ]; then
@@ -70,13 +75,11 @@ if [ "$broadcast" != "true" ]; then
     exit 0
 fi
 
-# Create the OFT
-echo "Creating the OFT"
-pnpm hardhat lz:oft:solana:create \
-    --eid $EID \
+echo "Verifying the OFT program"
+solana-verify verify-from-repo \
+    $NETWORK_FLAG \
     --program-id $PROGRAM_ID \
-    --additional-minters "" \
-    --local-decimals $TOKEN_DECIMALS \
-    --name $TOKEN_NAME \
-    --symbol $TOKEN_SYMBOL \
-    --uri $TOKEN_METADATA_URI
+    --library-name oft \
+    --keypair $KEYPAIR_FILE \
+    https://github.com/OlympusDAO/solanOHM \
+    -- --config env.OFT_ID=\'$PROGRAM_ID\'

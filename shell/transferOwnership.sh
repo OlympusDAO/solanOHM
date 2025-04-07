@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Usage: ./shell/createOft.sh
+# Transfers owneship of the OFT to the DAO multisig
+# Usage: ./shell/transferOwnership.sh
 #   --network <devnet|mainnet>
 #   [--broadcast <true|false>]
 
@@ -39,29 +40,18 @@ if [ -z "$PROGRAM_ID" ]; then
     exit 1
 fi
 
-# Get the eid from the environment
-EID=$(jq -r ".${network}.solana.eid" env.json)
-if [ -z "$EID" ]; then
-    display_error "Error: eid is not set for network $network"
+# Get the owner from the environment
+OWNER=$(jq -r ".${network}.olympus.owner" env.json)
+if [ -z "$OWNER" ]; then
+    display_error "Error: owner is not set for network $network"
     exit 1
 fi
-
-# Define other attributes
-TOKEN_NAME="Olympus"
-TOKEN_SYMBOL="OHM"
-TOKEN_DECIMALS=9
-TOKEN_METADATA_URI="https://raw.githubusercontent.com/OlympusDAO/solanOHM/62f0a01f8b5387d2865e6e84e6da28489dda55b8/assets/metadata.json"
 
 echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  Program ID: $PROGRAM_ID"
-echo "  EID: $EID"
-echo "  Additional Minters: None"
-echo "  Token Name: $TOKEN_NAME"
-echo "  Token Symbol: $TOKEN_SYMBOL"
-echo "  Token Decimals: $TOKEN_DECIMALS"
-echo "  Token Metadata URI: $TOKEN_METADATA_URI"
+echo "  Owner: $OWNER"
 echo ""
 
 if [ "$broadcast" != "true" ]; then
@@ -70,13 +60,8 @@ if [ "$broadcast" != "true" ]; then
     exit 0
 fi
 
-# Create the OFT
-echo "Creating the OFT"
-pnpm hardhat lz:oft:solana:create \
-    --eid $EID \
-    --program-id $PROGRAM_ID \
-    --additional-minters "" \
-    --local-decimals $TOKEN_DECIMALS \
-    --name $TOKEN_NAME \
-    --symbol $TOKEN_SYMBOL \
-    --uri $TOKEN_METADATA_URI
+echo "Transferring ownership of the OFT program"
+solana program set-upgrade-authority \
+    --skip-new-upgrade-authority-signer-check \
+    $PROGRAM_ID \
+    --new-upgrade-authority $OWNER
