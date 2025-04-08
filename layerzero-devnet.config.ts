@@ -10,7 +10,7 @@ const sepoliaContract: OmniPointHardhat = {
 
 const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
-    address: '2C6cFDf4FQPrFvAJKJ2B4ob3nZ1GmXfSjUAgeauT3VVm',
+    address: '32ThC75Zyrw9qyLGoeQRWtf6Y1MKc8eFatdUywoBaCTW',
 }
 
 // The values here are for development purposes. E.g. confirmations are set to 1. For production, they should be reviewed and edited accordingly.
