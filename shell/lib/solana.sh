@@ -27,7 +27,7 @@ set_keypair_path() {
     keypair_path=$(echo "$keypair_path" | sed 's/^Key Path: //')
 
     # Verify that the keypair exists
-    if [ ! -f "$keypair_path" ]; then
+    if [ ! -f $keypair_path ]; then
         display_error "Keypair not found at $keypair_path"
         exit 1
     fi
