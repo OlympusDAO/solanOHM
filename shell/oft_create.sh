@@ -43,6 +43,18 @@ fi
 # Determine the keypair being used
 set_keypair_path
 
+# Specify the OFT file
+OFT_FILE=""
+if [ "$network" == "devnet" ]; then
+    OFT_FILE="deployments/solana-testnet/OFT.json"
+elif [ "$network" == "mainnet" ]; then
+    OFT_FILE="deployments/solana-mainnet/OFT.json"
+else
+    display_error "Invalid network: $network"
+    display_error "Provide the network as --network <devnet|mainnet>"
+    exit 1
+fi
+
 # Define other attributes
 TOKEN_NAME="Olympus"
 TOKEN_SYMBOL="OHM"
@@ -79,4 +91,10 @@ pnpm hardhat lz:oft:solana:create \
     --symbol $TOKEN_SYMBOL \
     --uri $TOKEN_METADATA_URI
 
-# Get the OFT store
+# Get the OFT store value
+OFT_STORE=$(jq -r ".oftStore" $OFT_FILE)
+echo "OFT store: $OFT_STORE"
+
+# Get the token address
+TOKEN_ADDRESS=$(jq -r ".mint" $OFT_FILE)
+echo "Token address: $TOKEN_ADDRESS"

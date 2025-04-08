@@ -140,12 +140,16 @@ You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknod
 
 The OFT account is created without any additional minters (the bridge is the only one).
 
-The OFT store value will be printed.
+The OFT store and token addresses will be printed.
 
-Save that in:
+Save the OFT Store in:
 
 - env.json: `<network>.oft.oftStore`
 - layerzero-<network>.config.ts: `solanaContract.address`
+
+Save the Token address in:
+
+- env.json: `<network>.token`
 
 :information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
