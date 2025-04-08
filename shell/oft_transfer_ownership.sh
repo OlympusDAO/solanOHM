@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Transfers owneship of the OFT to the DAO multisig
-# Usage: ./shell/transferOwnership.sh
+# Transfers ownership of the OFT program to the DAO multisig
+# Usage: ./shell/oft_transfer_ownership.sh
 #   --network <devnet|mainnet>
 #   [--broadcast <true|false>]
 
@@ -11,19 +11,13 @@ set -e
 # Load named arguments
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source $SCRIPT_DIR/lib/arguments.sh
+source $SCRIPT_DIR/lib/solana.sh
 load_named_args "$@"
 
 # Validate named arguments
 echo ""
 echo "Validating arguments"
-validate_text "$network" "No network specified. Provide the network as --network <devnet|mainnet>"
-
-# Validate the network
-if [ -z "$network" ] || [ "$network" != "devnet" ] && [ "$network" != "mainnet" ]; then
-    display_error "Invalid network: $network"
-    display_error "Provide the network as --network <devnet|mainnet>"
-    exit 1
-fi
+validate_network "$network"
 
 # Get the broadcast flag, if defined
 broadcast=${broadcast:-false}
@@ -41,17 +35,23 @@ if [ -z "$PROGRAM_ID" ]; then
 fi
 
 # Get the owner from the environment
-OWNER=$(jq -r ".${network}.olympus.owner" env.json)
-if [ -z "$OWNER" ]; then
-    display_error "Error: owner is not set for network $network"
+NEW_OWNER=$(jq -r ".${network}.olympus.daoMS" env.json)
+if [ -z "$NEW_OWNER" ]; then
+    display_error "Error: daoMS is not set for network $network"
     exit 1
 fi
+
+# Determine the keypair being used
+set_keypair_path
+set_public_key
 
 echo ""
 echo "Summary:"
 echo "  Network: $network"
+echo "  Keypair: $keypair_path"
+echo "  Public Key: $public_key"
 echo "  Program ID: $PROGRAM_ID"
-echo "  Owner: $OWNER"
+echo "  New Owner: $NEW_OWNER"
 echo ""
 
 if [ "$broadcast" != "true" ]; then
@@ -64,4 +64,4 @@ echo "Transferring ownership of the OFT program"
 solana program set-upgrade-authority \
     --skip-new-upgrade-authority-signer-check \
     $PROGRAM_ID \
-    --new-upgrade-authority $OWNER
+    --new-upgrade-authority $NEW_OWNER

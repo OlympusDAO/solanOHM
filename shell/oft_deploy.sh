@@ -55,11 +55,13 @@ fi
 
 # Determine the keypair being used
 set_keypair_path
+set_public_key
 
 echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  Keypair: $keypair_path"
+echo "  Public Key: $public_key"
 echo "  Priority Fee Flag: $priority_fee_flag"
 echo ""
 

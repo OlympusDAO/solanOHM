@@ -21,6 +21,7 @@ validate_network "$network"
 
 # Validate the keypair
 set_keypair_path
+set_public_key
 
 # Get the broadcast flag, if defined
 broadcast=${broadcast:-false}
@@ -51,8 +52,9 @@ fi
 echo ""
 echo "Summary:"
 echo "  Network: $network"
-echo "  Program ID: $PROGRAM_ID"
 echo "  Keypair: $keypair_path"
+echo "  Public Key: $public_key"
+echo "  Program ID: $PROGRAM_ID"
 echo ""
 
 if [ "$broadcast" != "true" ]; then

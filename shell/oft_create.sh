@@ -42,6 +42,7 @@ fi
 
 # Determine the keypair being used
 set_keypair_path
+set_public_key
 
 # Specify the OFT file
 OFT_FILE=""
@@ -65,6 +66,7 @@ echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  Keypair: $keypair_path"
+echo "  Public Key: $public_key"
 echo "  Program ID: $PROGRAM_ID"
 echo "  EID: $EID"
 echo "  Additional Minters: None"

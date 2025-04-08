@@ -32,3 +32,8 @@ set_keypair_path() {
         exit 1
     fi
 }
+
+set_public_key() {
+    # Run the Solana CLI command to get the public key
+    public_key=$(solana address)
+}
