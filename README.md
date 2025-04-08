@@ -102,6 +102,8 @@ https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-path
 
 The steps below can be used for either the Solana testnet/devnet or mainnet by changing the appropriate flag.
 
+Docker must be running for many of these commands to work.
+
 ### Configure Solana CLI
 
 Configure the Solana CLI to use the correct RPC URL:
