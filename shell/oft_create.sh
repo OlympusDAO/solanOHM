@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./shell/createOft.sh
+# Usage: ./shell/oft_create.sh
 #   --network <devnet|mainnet>
 #   [--broadcast <true|false>]
 
@@ -10,19 +10,13 @@ set -e
 # Load named arguments
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source $SCRIPT_DIR/lib/arguments.sh
+source $SCRIPT_DIR/lib/solana.sh
 load_named_args "$@"
 
 # Validate named arguments
 echo ""
 echo "Validating arguments"
-validate_text "$network" "No network specified. Provide the network as --network <devnet|mainnet>"
-
-# Validate the network
-if [ -z "$network" ] || [ "$network" != "devnet" ] && [ "$network" != "mainnet" ]; then
-    display_error "Invalid network: $network"
-    display_error "Provide the network as --network <devnet|mainnet>"
-    exit 1
-fi
+validate_network "$network"
 
 # Get the broadcast flag, if defined
 broadcast=${broadcast:-false}
@@ -46,6 +40,9 @@ if [ -z "$EID" ]; then
     exit 1
 fi
 
+# Determine the keypair being used
+set_keypair_path
+
 # Define other attributes
 TOKEN_NAME="Olympus"
 TOKEN_SYMBOL="OHM"
@@ -55,6 +52,7 @@ TOKEN_METADATA_URI="https://raw.githubusercontent.com/OlympusDAO/solanOHM/62f0a0
 echo ""
 echo "Summary:"
 echo "  Network: $network"
+echo "  Keypair: $keypair_path"
 echo "  Program ID: $PROGRAM_ID"
 echo "  EID: $EID"
 echo "  Additional Minters: None"
@@ -80,3 +78,5 @@ pnpm hardhat lz:oft:solana:create \
     --name $TOKEN_NAME \
     --symbol $TOKEN_SYMBOL \
     --uri $TOKEN_METADATA_URI
+
+# Get the OFT store

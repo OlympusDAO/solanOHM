@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Verifies the OFT program on the given network
-# Usage: ./shell/verifyProgram.sh
+# Usage: ./shell/oft_verify.sh
 #   --network <devnet|mainnet>
 #   [--broadcast <true|false>]
 
@@ -11,30 +11,16 @@ set -e
 # Load named arguments
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source $SCRIPT_DIR/lib/arguments.sh
+source $SCRIPT_DIR/lib/solana.sh
 load_named_args "$@"
 
 # Validate named arguments
 echo ""
 echo "Validating arguments"
-validate_text "$network" "No network specified. Provide the network as --network <devnet|mainnet>"
-
-# Validate the network
-if [ -z "$network" ] || [ "$network" != "devnet" ] && [ "$network" != "mainnet" ]; then
-    display_error "Invalid network: $network"
-    display_error "Provide the network as --network <devnet|mainnet>"
-    exit 1
-fi
+validate_network "$network"
 
 # Validate the keypair
-KEYPAIR_FILE="~/.config/solana/id.json"
-if [ -n "$keypair" ]; then
-    if [ -f "$keypair" ]; then
-        KEYPAIR_FILE="$keypair"
-    else
-        display_error "Error: Keypair file not found at $keypair"
-        exit 1
-    fi
-fi
+set_keypair_path
 
 # Get the broadcast flag, if defined
 broadcast=${broadcast:-false}
@@ -66,7 +52,7 @@ echo ""
 echo "Summary:"
 echo "  Network: $network"
 echo "  Program ID: $PROGRAM_ID"
-echo "  Keypair: $KEYPAIR_FILE"
+echo "  Keypair: $keypair_path"
 echo ""
 
 if [ "$broadcast" != "true" ]; then
@@ -80,6 +66,6 @@ solana-verify verify-from-repo \
     $NETWORK_FLAG \
     --program-id $PROGRAM_ID \
     --library-name oft \
-    --keypair $KEYPAIR_FILE \
+    --keypair $keypair_path \
     https://github.com/OlympusDAO/solanOHM \
     -- --config env.OFT_ID=\'$PROGRAM_ID\'

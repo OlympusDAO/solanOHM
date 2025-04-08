@@ -1,35 +1,13 @@
-<p align="center">
-  <a href="https://layerzero.network">
-    <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>
-  </a>
-</p>
+# solanOHM
 
-<p align="center">
-  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
-</p>
+This repository is a modified version of the LayerZero [Endpoint V1 + Solana OFT](https://github.com/LayerZero-Labs/devtools/tree/c097c4fa9d3ae307755338dad7a581fc93e9f97e/examples/lzapp-migration) example. It has been modified to support Olympus' bridge setup using Endpoint V1 and the LzApp approach (see the [CrossChainBridge policy](https://github.com/OlympusDAO/olympus-v3/blob/7303abb70ed055a7063210ea9641c3a2490c34d4/src/policies/CrossChainBridge.sol)).
 
-<h1 align="center">EndpointV1 OFT Migration + Solana OFT202 Example</h1>
+It provides:
 
-<p align="center">Example project for existing Endpoint v1 OFTs that would like to migrate to using ULN 301 to utilize the new security and execution model and to be able to integrate Solana OFTs.</p>
-
-:warning: The backward compatible Solana OFT (OFT202) will only work with Endpoint V1 OFT V2s. In other words, it will only work if the EVM OFT extended [OFTCoreV2](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v2/OFTCoreV2.sol) and will not work if the EVM OFT extended [OFTCore](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v1/OFTCore.sol).
-
-## Requirements
-
-- Rust `v1.75.0`
-- Anchor `v0.29`
-- Solana CLI `v1.17.31`
-- Docker
-- Node.js
+- Deployment of an OFT on Solana
+- Setting the mainnet/sepolia CrossChainBridge policy as a trusted remote
 
 ## Setup
-
-We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
-
-[Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
-builds.
-
-:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. Using higher Anchor and Solana versions can introduce unexpected issues during compilation. See the following issues in Anchor's repo: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835). After compiling the correct build artifacts, you can change the Solana version to higher versions.
 
 ### Install Rust
 
@@ -51,11 +29,38 @@ Install and use the correct version
 cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
 ```
 
-### Get the code
+### Install solana-verify
+
+`cargo install solana-verify`
+
+### Install Deployer Keypair
+
+#### Olympus Deployer
+
+If using the Olympus Deployer wallet, place the keypair in the `~/.config/solana/olympus-deployer.json` file.
+
+Then configure the Solana CLI to use that keypair by default: `solana config set --keypair ~/.config/solana/olympus-deployer.json`
+
+#### Other Wallet
+
+Otherwise, the default wallet at `~/.config/solana/id.json` will be used. You may need to create this.
+
+### Install OFT Program Keypair
+
+#### Existing Keypairs
+
+Place the keypair files in `target/deploy/endpoint-keypair.json` and `target/deploy/oft-keypair.json`. These will need to be manually shared. These keypairs are tied to the deployer keypair, and must be re-generated if the keypair is changed.
+
+#### New Keypairs
 
 ```bash
-LZ_ENABLE_MIGRATION_EXAMPLE=1 npx create-lz-oapp@latest
+./shell/oft_keypair.sh
 ```
+
+Ensure the following files have the updated OFT ID:
+
+- Anchor.toml: programs.localnet.oft
+- env.json: <network>.oft.programId (for all affected networks)
 
 ### Get Devnet SOL
 
@@ -77,162 +82,70 @@ You can run the `npx hardhat lz:solana:base-58` to output your private key in ba
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
-## Example Overview
+### Install Dependencies
 
-For this example, we will deploy the EndpointV1 OFT on Ethereum Sepolia and also OFT202 on Solana Devnet.
+`pnpm install`
 
-:warning: This example repo only works with `@openzeppelin/contracts@^4.0.0` and will not work for `@openzeppelin/contracts@^5.0.0` given the change in the constructor for `Ownable`. The EndpointV1 OFT contracts were built using `@openzeppelin/contracts@^4.0.0` so we emulate that in this repo.
+## Config
 
-## Preparing config files
+The local scripts use the [env.json](env.json) file to store configuration variables.
 
-In `hardhat.config.ts`, we have specified the `eid` for `sepolia-testnet` to use the EndpointV1 `eid`
+LayerZero requires an additional configuration file. The local scripts will use [layerzero-testnet.config.ts] or [layerzero-mainnet.config.ts] automatically, depending on the network specified.
 
-```
-networks: {
-    'sepolia-testnet': {
-        eid: EndpointId.SEPOLIA_TESTNET,
-```
+### Adding a New Network
 
-In `layerzero.config.ts`, for the pathway from Sepolia to Solana, we have specified the following:
+TODO
 
-- `sendLibrary`: `0x6862b19f6e42a810946B9C782E6ebE26Ad266C84` (SendUln301)
-- `receiveLibraryConfig.receiveLibrary`: `0x5937A5fe272fbA38699A1b75B3439389EEFDb399` (ReceiveUln301)
+https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways
 
-To view the list of ULN addresses on all networks, refer to https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts
+## Deployment
 
-## Developing Contracts
+The steps below can be used for either the Solana testnet/devnet or mainnet by changing the appropriate flag.
 
-#### Installing dependencies
+### Configure Solana CLI
 
-We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
+Configure the Solana CLI to use the correct RPC URL:
 
 ```bash
-pnpm install
+solana config set --url <devnet|mainnet>
 ```
 
-#### Running tests
-
-Similarly to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
+### Build the Solana OFT Program
 
 ```bash
-pnpm test
+./shell/oft_build.sh --network <devnet|mainnet>
 ```
 
-#### Compiling your contracts
+### Deploy the Solana OFT Program
 
-##### EVM (EndpointV1 OFT)
-
-This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
+While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`). The deploy script will automatically switch versions and restore.
 
 ```bash
-pnpm compile
+./shell/oft_deploy.sh --network <devnet|mainnet> --broadcast <true|false>
 ```
 
-##### Solana (OFT202)
-
-### Prepare the OFT Program ID
-
-Create `programId` keypair files by running:
-
-```bash
-solana-keygen new -o target/deploy/endpoint-keypair.json --force
-solana-keygen new -o target/deploy/oft-keypair.json --force
-
-anchor keys sync
-```
-
-:warning: `--force` flag overwrites the existing keys with the ones you generate.
-
-Run
-
-```
-anchor keys list
-```
-
-to view the generated programIds (public keys). The output should look something like this:
-
-```
-oft: <OFT_PROGRAM_ID>
-```
-
-### Building and Deploying the Solana OFT Program
-
-Ensure you have Docker running before running the build command.
-
-#### Build the Solana OFT program
-
-```bash
-anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
-```
-
-## Deploying Contracts
-
-### EVM (EndpointV1 OFT)
-
-Set up deployer wallet/account:
-
-- in `.env`, choose your preferred means of setting up your deployer wallet/account:
-
-```
-MNEMONIC="test test test test test test test test test test test junk"
-or...
-PRIVATE_KEY="0xabc...def"
-```
-
-To deploy your contracts to your desired EVM chains, run the following command in your project's folder:
-
-```bash
-npx hardhat lz:deploy
-```
-
-More information about available CLI arguments can be found using the `--help` flag:
-
-```bash
-npx hardhat lz:deploy --help
-
-```
-
-### Solana (OFT202)
-
-#### Deploy the Solana OFT
-
-While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
-
-##### Temporarily switch to Solana `v1.18.26`
-
-First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
-
-```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
-```
-
-##### (Recommended) Deploying with a priority fee
+#### Priority Fee
 
 This section applies if you are unable to land your deployment transaction due to network congestion.
 
-:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
+:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--priority-fee` flag to our `oft_deploy.sh` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
 
-You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknode.com/gas-tracker/solana) to know what value you'd need to pass into the `--with-compute-unit-price` flag.
+You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknode.com/gas-tracker/solana) to know what value you'd need to pass into the `--priority-fee` flag.
 
-##### Run the deploy command
-
-```bash
-solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
-```
-
-:information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
-
-:warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
-
-##### Switch back to Solana `1.17.31`
-
-:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
+### Create the Solana OFT202 Accounts
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+./shell/oft_create.sh --network <devnet|mainnet> --broadcast <true|false>
 ```
 
-#### Create the Solana OFT202 acounts
+The OFT account is created without any additional minters (the bridge is the only one).
+
+The OFT store value will be printed.
+
+Save that in:
+
+- env.json: `<network>.oft.oftStore`
+- layerzero-<network>.config.ts: `solanaContract.address`
 
 :information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
@@ -240,64 +153,31 @@ sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 
 :warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
 
-#### For OFT:
+### Verify the OFT Program
 
 ```bash
-pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
+./shell/oft_verify.sh --network <devnet|mainnet> --broadcast <true|false>
 ```
 
-:warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+### Link Solana Endpoint to EVM
 
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
-
-#### For OFTAdapter:
+The following command will link the Solana endpoint to the EVM (mainnet or sepolia, depending on the --network flag).
 
 ```bash
-pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
+./shell/endpoint_solana.sh --network <devnet|mainnet> --broadcast <true|false>
 ```
 
-:information_source: You can use OFT Adapter if you want to use an existing token on Solana. For OFT Adapter, tokens will be locked when sending to other chains and unlocked when receiving from other chains.
+### Transfer Ownership to MS
 
-#### For OFT Mint-And-Burn Adapter (MABA):
+Prior to linking the EVM endpoint to Solana, transfer ownership of the OFT to the MS.
 
-```bash
-pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
-```
+### Link EVM Endpoint to Solana
 
-:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
+TODO
 
-:warning: You cannot use this option if your token's Mint Authority has been renounced.
+### Call `setDstMinGas`
 
-:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
-
-### Configuration
-
-#### Update [layerzero.config.ts](./layerzero.config.ts)
-
-Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
-
-```typescript
-const solanaContract: OmniPointHardhat = {
-  eid: EndpointId.SOLANA_V2_TESTNET,
-  address: "", // <---TODO update this with the OFTStore address.
-};
-```
-
-#### Initialize the OFT Program's SendConfig and ReceiveConfig Accounts
-
-:warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
-
-```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
-```
-
-#### Run the wire command
-
-```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
-```
-
-#### Call `setDstMinGas`
+TODO needed?
 
 The script will set it to the default value of `1`, which is all that's needed in order to bypass gas assertion.
 
@@ -305,7 +185,9 @@ The script will set it to the default value of `1`, which is all that's needed i
 npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
 ```
 
-### Calling Send
+### Sending Tokens
+
+TODO verify these, create scripts
 
 Sepolia V1 to Solana
 
@@ -318,86 +200,3 @@ Solana to Sepolia V1
 ```bash
 npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_ADDRESS> --to-eid 10161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
-
-Congratulations!
-
-## Behind The Scenes
-
-Below is an expanded README section that describes not only the overall configuration and wiring between the V1 and V2 endpoints but also explains the purpose of the overridden tasks provided in the repository:
-
-## Overview
-
-This example demonstrates how to establish cross-chain communication between a LayerZero V1 contract (running on **SEPOLIA_TESTNET**) and a LayerZero V2 contract (running on **SOLANA_V2_TESTNET**). The configuration allows the endpoints to exchange messages even though they run on different protocol versions by ensuring that the app-level messaging codec and underlying endpoint codecs are aligned.
-
-## Key Configuration Details
-
-- **Endpoints:**
-
-  - **SEPOLIA_TESTNET (V1):** Represented by the contract `MyLzApp`.
-  - **SOLANA_V2_TESTNET (V2):** Represented by the program `OFT202`.
-
-- **Connection Parameters:**  
-  For each connection, the configuration specifies:
-  - **Send/Receive Library Addresses:** The libraries responsible for encoding and decoding messages.
-  - **Executor & ULN Configurations:** These determine how messages are processed, including confirmation settings and DVN (Data Validation Node) requirements.
-- **Wiring Process:**  
-  The wiring tasks filter connections by endpoint version:
-  - **V1 Endpoint Logic:** Custom configuration logic is applied for **SEPOLIA_TESTNET** to handle the specific requirements of a V1 LzApp.
-  - **V2 Endpoint Logic:** The default logic is used for **SOLANA_V2_TESTNET**, ensuring that the V2 OApp receives the configuration it expects.
-
-## Overridden Tasks and Their Purpose
-
-The repository includes several custom tasks that extend or override the default LayerZero tooling. Their purposes are as follows:
-
-- **`wire.ts`:**
-  - **Purpose:** Extends the default wiring task to support filtering of connections by endpoint version.
-  - **What It Does:**
-    - Filters the full omni-graph into V1 and V2 parts.
-    - Applies custom configuration logic for V1 endpoints (e.g., fetching and setting trusted remotes, send/receive libraries, and ULN/executor configurations).
-    - For V2 endpoints, it defers to the default wiring logic, ensuring compatibility between the two versions.
-- **`config.get.ts`:**
-
-  - **Purpose:** Overrides the configuration fetching task to retrieve and display comprehensive configuration details for each connection.
-  - **What It Does:**
-    - Loads the omni-graph configuration for the OApp.
-    - Iterates through each connection and retrieves various configuration settings (custom, default, and active).
-    - Outputs a cross-table comparing configurations for send/receive libraries, ULN, and executor settings.
-    - This task helps developers verify that the correct configurations are being used for both V1 and V2 endpoints.
-
-- **`taskHelper.ts`:**
-  - **Purpose:** Provides shared helper functions that simplify interactions with deployed contracts and streamline configuration management.
-  - **What It Does:**
-    - Implements functions for encoding and decoding configuration parameters.
-    - Retrieves configuration details (such as ULN and executor configs) for both V1 and V2 endpoints.
-    - Handles setting trusted remote addresses, send/receive library addresses, and applying ULN configurations.
-    - Serves as the backbone for both `wire.ts` and `config.get.ts` tasks, ensuring consistency across the configuration and wiring processes.
-
-## How It All Works Together
-
-1. **Configuration Loading:**  
-   The `config.get.ts` task loads the omni-graph configuration file, which defines how each endpoint is connected and what parameters to use.
-
-2. **Custom Wiring:**  
-   The `wire.ts` task leverages the helper functions in `taskHelper.ts` to:
-
-   - Filter connections for V1 and V2 endpoints.
-   - Generate and sign the necessary transactions to set the configurations (e.g., trusted remotes, libraries, ULN, and executor settings).
-
-3. **Deployment & Execution:**  
-   When you run the provided deployment and wiring commands, the tasks work together to:
-   - Automatically fetch the configuration settings.
-   - Adjust the deployed contracts so that a V1 LzApp (**SEPOLIA_TESTNET**) can communicate with a V2 OApp (**SOLANA_V2_TESTNET**).
-
-By overriding these tasks, the example streamlines the complex process of ensuring compatibility between different LayerZero versions, allowing developers to focus on building omnichain solutions without being bogged down by the underlying cross-chain configuration details.
-
-<br></br>
-
-<p align="center">
-  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
-</p>
-
-### Troubleshooting
-
-For the Solana-related steps, you may also refer to the default [Solana OFT example README](https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana) which might have more elaboration on the Solana side.
-
-Refer to the [Solana Troubleshooting page on the LayerZero Docs](https://docs.layerzero.network/v2/developers/solana/troubleshooting/common-errors) to see how to solve common error when deploying Solana OFTs.

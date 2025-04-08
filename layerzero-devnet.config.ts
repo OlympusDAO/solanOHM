@@ -3,11 +3,9 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-// TODO read from env.json
-
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1
-    contractName: 'CrossChainBridge'
+    contractName: 'CrossChainBridge',
 }
 
 const solanaContract: OmniPointHardhat = {
