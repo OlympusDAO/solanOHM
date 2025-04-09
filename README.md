@@ -24,6 +24,13 @@ On the specified EVM chain:
 
 - Bridge contract linked to the specified Solana chain
 
+The current setup only supports 1-to-1 bridging, for example:
+
+- Ethereum Sepolia <-> Solana Devnet
+- Ethereum Mainnet <-> Solana Mainnet
+
+Additional work would be required to configure bridging from Ethereum L2s to Solana (and vice-versa).
+
 ## Setup
 
 ### Install Rust
@@ -206,7 +213,11 @@ Currently, the update authority of the token will rename with the deployer. Ther
 
 ### Link EVM Endpoint to Solana
 
-TODO
+```bash
+./shell/endpoint_evm.sh --network <devnet|mainnet> --account <cast account> --broadcast <true|false>
+```
+
+This script will work on testnets, assuming that the `cast` account provided has the `"bridge_admin"` role. Mainnet/production deployments will need an OCG proposal or MS batch to perform this.
 
 ### Call `setDstMinGas`
 
