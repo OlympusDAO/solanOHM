@@ -7,6 +7,20 @@ It provides:
 - Deployment of an OFT on Solana
 - Setting the mainnet/sepolia CrossChainBridge policy as a trusted remote
 
+## Architecture
+
+Following the instructions below will result in the following being deployed:
+
+On the specified Solana chain:
+
+- OHM token (see env.json `<network>.token`)
+- OFT program (see env.json `<network>.oft.programId`)
+- OFT program linked to the bridge contract on the specified EVM chain
+
+On the specified EVM chain:
+
+- Bridge contract linked to the specified Solana chain
+
 ## Setup
 
 ### Install Rust
@@ -96,9 +110,11 @@ LayerZero requires an additional configuration file. The local scripts will use 
 
 ### Adding a New Network
 
-TODO
-
-https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways
+- TODO: Run the script to generate a new LayerZero config. https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways
+- In the `deployments/` directory, create a directory for the network that you wish to add:
+    - `.chainId`: LayerZero chain id
+    - `CrossChainBridge.json`: JSON containing `address` and `abi` keys.
+    - See `deployments/solana-testnet/` for an example.
 
 ## Deployment
 
@@ -177,7 +193,13 @@ The following command will link the Solana endpoint to the EVM (mainnet or sepol
 
 ### Transfer Ownership to MS
 
-Prior to linking the EVM endpoint to Solana, transfer ownership of the OFT to the MS.
+Prior to linking the EVM endpoint to Solana, transfer ownership of the OFT program to the MS.
+
+```bash
+./shell/oft_transfer_ownership --network <devnet|mainnet> --broadcast <true|false>
+```
+
+Currently, the update authority of the token will rename with the deployer. There does not appear to be a way to change that.
 
 ### Link EVM Endpoint to Solana
 
