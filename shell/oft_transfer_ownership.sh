@@ -34,7 +34,10 @@ if [ -z "$PROGRAM_ID" ]; then
     exit 1
 fi
 
-# Get the owner from the environment
+# Get the current owner of the OFT program
+CURRENT_OWNER=$(solana program show $PROGRAM_ID --output json | jq -r '.authority')
+
+# Get the new owner from the environment
 NEW_OWNER=$(jq -r ".${network}.olympus.daoMS" env.json)
 if [ -z "$NEW_OWNER" ]; then
     display_error "Error: daoMS is not set for network $network"
@@ -51,6 +54,7 @@ echo "  Network: $network"
 echo "  Keypair: $keypair_path"
 echo "  Public Key: $public_key"
 echo "  Program ID: $PROGRAM_ID"
+echo "  Current Owner: $CURRENT_OWNER"
 echo "  New Owner: $NEW_OWNER"
 echo ""
 
