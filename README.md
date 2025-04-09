@@ -122,7 +122,7 @@ LayerZero requires an additional configuration file. The local scripts will use 
 
 - TODO: Run the script to generate a new LayerZero config. https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways
 - In the `deployments/` directory, create a directory for the network that you wish to add:
-  - `.chainId`: LayerZero chain id
+  - `.chainId`: EVM chain id
   - `CrossChainBridge.json`: JSON containing `address` and `abi` keys.
   - See `deployments/solana-testnet/` for an example.
 
@@ -206,7 +206,7 @@ The following command will link the Solana endpoint to the EVM (mainnet or sepol
 Prior to linking the EVM endpoint to Solana, transfer ownership of the OFT program to the MS.
 
 ```bash
-./shell/oft_transfer_ownership --network <devnet|mainnet> --broadcast <true|false>
+./shell/oft_transfer_ownership.sh --network <devnet|mainnet> --broadcast <true|false>
 ```
 
 Currently, the update authority of the token will rename with the deployer. There does not appear to be a way to change that.
@@ -231,20 +231,22 @@ npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
 
 ### Sending Tokens
 
-TODO verify these, create scripts
+#### EVM to Solana
 
-Sepolia V1 to Solana
+For Ethereum Sepolia -> Solana devnet:
 
 ```bash
-npx hardhat --network sepolia-testnet lz:oft-v1:send --dst-eid 40168 --amount 1000000000000000000 --to <SOLANA_ADDRESS>
+./shell/bridge.sh --fromChain sepolia --toChain solana-dev --to <recipient-address> --amount <amount> --account <account> --broadcast true --env .env.base
 ```
 
-Solana to Sepolia V1
+#### Solana to EVM
 
 ```bash
-npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_ADDRESS> --to-eid 10161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
+./shell/bridge_to_evm.sh --network <devnet|mainnet> --amount <amount> --to <recipient> --broadcast <true|false>
 ```
 
 ### Update SolScan Metadata
 
-TODO
+After deployment, the metadata on SolScan needs to be updated. [More information](https://info.solscan.io/solscan-token-reputation/).
+
+[Submission Form](https://solscan.io/token-update)
