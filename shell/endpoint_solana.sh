@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./shell/createOft.sh
+# Usage: ./shell/endpoint_solana.sh
 #   --network <devnet|mainnet>
 #   [--broadcast <true|false>]
 

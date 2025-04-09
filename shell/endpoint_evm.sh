@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./shell/createOft.sh
+# Usage: ./shell/endpoint_evm.sh
 #   --network <devnet|mainnet>
 #   --account <cast account>
 #   [--broadcast <true|false>]
