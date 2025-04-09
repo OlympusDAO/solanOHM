@@ -13,9 +13,12 @@ Following the instructions below will result in the following being deployed:
 
 On the specified Solana chain:
 
-- OHM token (see env.json `<network>.token`)
 - OFT program (see env.json `<network>.oft.programId`)
-- OFT program linked to the bridge contract on the specified EVM chain
+    - Owned by the account specified as the DAO MS (see env.json `<network>.olympus.daoMS`).
+- OHM token (see env.json `<network>.token`)
+    - Owned by the OFT program, via a 1/1 multisig owned by the OFT store, which is owned by the OFT program.
+    - The only minter is the OFT store (bridge). It cannot be minted outside of a bridge transaction.
+- OFT program linked to the bridge contract on the specified EVM chain.
 
 On the specified EVM chain:
 
