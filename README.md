@@ -14,10 +14,10 @@ Following the instructions below will result in the following being deployed:
 On the specified Solana chain:
 
 - OFT program (see env.json `<network>.oft.programId`)
-    - Owned by the account specified as the DAO MS (see env.json `<network>.olympus.daoMS`).
+  - Owned by the account specified as the DAO MS (see env.json `<network>.olympus.daoMS`).
 - OHM token (see env.json `<network>.token`)
-    - Owned by the OFT program, via a 1/1 multisig owned by the OFT store, which is owned by the OFT program.
-    - The only minter is the OFT store (bridge). It cannot be minted outside of a bridge transaction.
+  - Owned by the OFT program, via a 1/1 multisig owned by the OFT store, which is owned by the OFT program.
+  - The only minter is the OFT store (bridge). It cannot be minted outside of a bridge transaction.
 - OFT program linked to the bridge contract on the specified EVM chain.
 
 On the specified EVM chain:
@@ -122,9 +122,9 @@ LayerZero requires an additional configuration file. The local scripts will use 
 
 - TODO: Run the script to generate a new LayerZero config. https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways
 - In the `deployments/` directory, create a directory for the network that you wish to add:
-    - `.chainId`: LayerZero chain id
-    - `CrossChainBridge.json`: JSON containing `address` and `abi` keys.
-    - See `deployments/solana-testnet/` for an example.
+  - `.chainId`: LayerZero chain id
+  - `CrossChainBridge.json`: JSON containing `address` and `abi` keys.
+  - See `deployments/solana-testnet/` for an example.
 
 ## Deployment
 
