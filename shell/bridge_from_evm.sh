@@ -43,7 +43,7 @@ fi
 
 # Determine the source EID
 if [ "$network" == "devnet" ]; then
-    BRIDGE_ADDRESS="0x56A07e0b05D60EF41318c60935c57924804d4541"
+    BRIDGE_ADDRESS="0x953E1F2AF5D51Bbf28aD96659B49efd9fa06E34a"
     FROM_OHM="0x75201BC8207fb06bFEc6CD0AbA99451320aa8e89"
     FROM_MINTER="0x09F317888a27E14bBFb78Ea53B89De3c23e617BB"
     RPC_URL="https://gateway.tenderly.co/public/sepolia"

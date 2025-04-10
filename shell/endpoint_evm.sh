@@ -42,7 +42,7 @@ if [ "$network" == "mainnet" ]; then
     BRIDGE_ADDRESS="0x45e563c39cDdbA8699A90078F42353A57509543a"
     RPC_URL="https://eth.llamarpc.com"
 elif [ "$network" == "devnet" ]; then
-    BRIDGE_ADDRESS="0x56A07e0b05D60EF41318c60935c57924804d4541"
+    BRIDGE_ADDRESS="0x953E1F2AF5D51Bbf28aD96659B49efd9fa06E34a"
     RPC_URL="https://gateway.tenderly.co/public/sepolia"
 else
     display_error "Invalid network: $network"
