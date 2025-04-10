@@ -55,7 +55,15 @@ if [ "$broadcast" != "true" ]; then
     exit 0
 fi
 
+echo ""
 echo "Initializing the OFT config"
 pnpm hardhat lz:oft:solana:init-config \
+    --oapp-config $LAYERZERO_CONFIG \
+    --solana-eid $EID
+
+echo ""
+echo "Wiring the OFT"
+echo "NOTE: Do not execute the EVM setup transactions (step 1), but only the Solana setup transactions (step 2)"
+pnpm hardhat lz:oapp:wire \
     --oapp-config $LAYERZERO_CONFIG \
     --solana-eid $EID

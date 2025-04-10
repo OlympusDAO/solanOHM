@@ -205,6 +205,13 @@ The following command will link the Solana endpoint to the EVM (mainnet or sepol
 ./shell/endpoint_solana.sh --network <devnet|mainnet> --broadcast <true|false>
 ```
 
+This script has a few steps:
+
+- Initialising the OFT config: no input necessary
+- Wiring the OFT
+  - The script will prepare some transactions related to "LzApp" (EVM) and ask if you want to preview them (no) and then submit them (no).
+  - It will then prepare some transactions related to "OApp" (Solana, in this case). Preview and submit them.
+
 ### Transfer Ownership to MS
 
 Prior to linking the EVM endpoint to Solana, transfer ownership of the OFT program to the MS.
