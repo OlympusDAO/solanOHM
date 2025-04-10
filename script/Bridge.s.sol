@@ -23,7 +23,6 @@ contract BridgeScript is Script {
         vm.stopBroadcast();
 
         // Estimate the send fee
-        // Do a low-level call to the bridge's endpoint address
         ICrossChainBridge bridgeContract = ICrossChainBridge(fromBridge_);
 
         (uint256 nativeFee,) = bridgeContract.estimateSendFee(toChainId_, toAddress_, amount_, bytes(""));
