@@ -247,7 +247,7 @@ npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
 For Ethereum Sepolia -> Solana devnet:
 
 ```bash
-./shell/bridge.sh --fromChain sepolia --toChain solana-dev --to <recipient-address> --amount <amount> --account <account> --broadcast true --env .env.base
+./shell/bridge_from_evm.sh --network <devnet|mainnet> --to <recipient-address> --amount <amount> --account <account> --broadcast <true|false>
 ```
 
 #### Solana to EVM
