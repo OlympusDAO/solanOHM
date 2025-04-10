@@ -50,7 +50,8 @@ else
 fi
 
 # Encode the Solana OFT address as bytes
-SOLANA_OFT_ADDRESS_BYTES=$(cast --from-utf8 $OFT_STORE)
+SOLANA_OFT_ADDRESS_BYTES=$(echo $OFT_STORE | bs58 -d | xxd -p -c 32)
+SOLANA_OFT_ADDRESS_BYTES32=$(cast --to-bytes32 $SOLANA_OFT_ADDRESS_BYTES)
 
 # Get the address of the cast account
 echo "Getting the address of the cast account"
@@ -75,9 +76,9 @@ echo ""
 echo "  EVM Bridge Address: $BRIDGE_ADDRESS"
 echo "  LayerZero Solana EID: $EID"
 echo "  OFT Store: $OFT_STORE"
-echo "  OFT Store (Bytes): $SOLANA_OFT_ADDRESS_BYTES"
+echo "  OFT Store (Bytes): $SOLANA_OFT_ADDRESS_BYTES32"
 echo ""
 
 # Execute the cast command
 echo "Setting the trusted remote for the EVM bridge"
-cast $CAST_SUBCOMMAND --rpc-url $RPC_URL --account $account -vvv $BRIDGE_ADDRESS "setTrustedRemote(uint16,bytes)" $EID $SOLANA_OFT_ADDRESS_BYTES
+cast $CAST_SUBCOMMAND --rpc-url $RPC_URL --account $account -vvv $BRIDGE_ADDRESS "setTrustedRemote(uint16,bytes)" $EID $SOLANA_OFT_ADDRESS_BYTES32

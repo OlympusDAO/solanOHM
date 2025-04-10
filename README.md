@@ -57,6 +57,10 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
 
 `cargo install solana-verify`
 
+### Install bs58-cli
+
+`cargo install bs58-cli`
+
 ### Install Deployer Keypair
 
 #### Olympus Deployer
