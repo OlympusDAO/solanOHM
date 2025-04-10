@@ -49,9 +49,8 @@ else
     exit 1
 fi
 
-# Encode the Solana OFT address as bytes
-SOLANA_OFT_ADDRESS_BYTES=$(echo $OFT_STORE | bs58 -d | xxd -p -c 32)
-SOLANA_OFT_ADDRESS_BYTES32=$(cast --to-bytes32 $SOLANA_OFT_ADDRESS_BYTES)
+# Encode the Solana OFT address as bytes32
+SOLANA_OFT_ADDRESS_BYTES="0x"$(echo $OFT_STORE | bs58 -d | xxd -p -c 32)
 
 # Get the address of the cast account
 echo "Getting the address of the cast account"
@@ -61,6 +60,7 @@ CAST_ACCOUNT_ADDRESS=$(cast wallet address --account $account)
 if [ "$BROADCAST" == "true" ]; then
     CAST_SUBCOMMAND="send"
 else
+    echo "Skipping broadcast. To broadcast the transaction, append '--broadcast true' to the command"
     CAST_SUBCOMMAND="call"
 fi
 
@@ -76,9 +76,9 @@ echo ""
 echo "  EVM Bridge Address: $BRIDGE_ADDRESS"
 echo "  LayerZero Solana EID: $EID"
 echo "  OFT Store: $OFT_STORE"
-echo "  OFT Store (Bytes): $SOLANA_OFT_ADDRESS_BYTES32"
+echo "  OFT Store (Bytes): $SOLANA_OFT_ADDRESS_BYTES"
 echo ""
 
 # Execute the cast command
 echo "Setting the trusted remote for the EVM bridge"
-cast $CAST_SUBCOMMAND --rpc-url $RPC_URL --account $account -vvv $BRIDGE_ADDRESS "setTrustedRemote(uint16,bytes)" $EID $SOLANA_OFT_ADDRESS_BYTES32
+cast $CAST_SUBCOMMAND --rpc-url $RPC_URL --account $account -vvv $BRIDGE_ADDRESS "setTrustedRemoteAddress(uint16,bytes)" $EID $SOLANA_OFT_ADDRESS_BYTES
