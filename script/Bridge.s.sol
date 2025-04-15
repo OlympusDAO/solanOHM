@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity 0.8.22;
 
-import {console2} from "forge-std/console2.sol";
-import {Script} from "forge-std/Script.sol";
-import {ICrossChainBridge} from "src/interfaces/ICrossChainBridge.sol";
-import {IERC20} from "src/interfaces/IERC20.sol";
+import { console2 } from "forge-std/console2.sol";
+import { Script } from "forge-std/Script.sol";
+import { ICrossChainBridge } from "src/interfaces/ICrossChainBridge.sol";
+import { IERC20 } from "src/interfaces/IERC20.sol";
 
 contract BridgeScript is Script {
     function bridge(
@@ -25,7 +25,7 @@ contract BridgeScript is Script {
         // Estimate the send fee
         ICrossChainBridge bridgeContract = ICrossChainBridge(fromBridge_);
 
-        (uint256 nativeFee,) = bridgeContract.estimateSendFee(toChainId_, toAddress_, amount_, bytes(""));
+        (uint256 nativeFee, ) = bridgeContract.estimateSendFee(toChainId_, toAddress_, amount_, bytes(""));
 
         console2.log("Bridging");
         console2.log("From chain:", fromChainId_);
@@ -36,7 +36,7 @@ contract BridgeScript is Script {
 
         // Bridge
         vm.startBroadcast();
-        bridgeContract.sendOhm{value: nativeFee}(toChainId_, toAddress_, amount_);
+        bridgeContract.sendOhm{ value: nativeFee }(toChainId_, toAddress_, amount_);
         vm.stopBroadcast();
 
         console2.log("Bridge complete");
