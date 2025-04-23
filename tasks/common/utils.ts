@@ -1,26 +1,36 @@
 import assert from 'assert'
 
-import { Keypair, PublicKey } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
+import pMemoize from 'p-memoize'
 
 import {
+    OmniAddress,
     OmniPoint,
     OmniSigner,
+    OmniTransaction,
     OmniTransactionReceipt,
     OmniTransactionResponse,
     firstFactory,
     formatEid,
+    makeBytes32,
+    mapError,
+    normalizePeer,
 } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import {
+    type ConnectionFactory,
     OmniSignerSolana,
     OmniSignerSolanaSquads,
+    type PublicKeyFactory,
     createConnectionFactory,
     createRpcUrlFactory,
+    defaultRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { IOApp } from '@layerzerolabs/ua-devtools'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
+import { IOApp, OAppFactory } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
+import { OFT } from '@layerzerolabs/ua-devtools-solana'
 
 export const createSolanaConnectionFactory = () =>
     createConnectionFactory(
@@ -28,6 +38,31 @@ export const createSolanaConnectionFactory = () =>
             [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
             [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
         })
+    )
+
+/**
+ * Syntactic sugar that creates an instance of Solana `OFT` SDK
+ * based on an `OmniPoint` with help of an `ConnectionFactory`
+ * and a `PublicKeyFactory`
+ *
+ * @param {PublicKeyFactory} userAccountFactory A function that accepts an `OmniPoint` representing an OFT and returns the user wallet public key
+ * @param {PublicKeyFactory} mintAccountFactory A function that accepts an `OmniPoint` representing an OFT and returns the mint public key
+ * @param {ConnectionFactory} connectionFactory A function that returns a `Connection` based on an `EndpointId`
+ * @returns {OAppFactory<OFT>}
+ */
+export const createOFTFactory = (
+    userAccountFactory: PublicKeyFactory,
+    programIdFactory: PublicKeyFactory,
+    connectionFactory: ConnectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+): OAppFactory<OFT> =>
+    pMemoize(
+        async (point: OmniPoint) =>
+            new OFTDeterministic(
+                await connectionFactory(point.eid),
+                point,
+                await userAccountFactory(point),
+                await programIdFactory(point)
+            )
     )
 
 export const createSdkFactory = (
@@ -83,5 +118,56 @@ export const createSolanaSignerFactory = (
         return multisigKey
             ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
             : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
+    }
+}
+
+export class OFTDeterministic extends OFT {
+    constructor(connection: Connection, point: OmniPoint, userAccount: PublicKey, programId: PublicKey) {
+        super(connection, point, userAccount, programId)
+    }
+
+    async setPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<OmniTransaction> {
+        const eidLabel = formatEid(eid)
+        // We use the `mapError` and pretend `normalizePeer` is async to avoid having a let and a try/catch block
+        const normalizedPeer = await mapError(
+            async () => normalizePeer(address, eid),
+            (error) =>
+                new Error(`Failed to convert peer ${address} for ${eidLabel} for ${this.label} to bytes: ${error}`)
+        )
+        const peerAsBytes32 = makeBytes32(normalizedPeer)
+        const delegate = await this.safeGetDelegate()
+
+        const oftStore = this.umiPublicKey
+
+        const instructions = [
+            await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
+        ]
+
+        const isSendLibraryInitialized = await this.isSendLibraryInitialized(eid)
+        if (!isSendLibraryInitialized) {
+            instructions.push(
+                oft.initSendLibrary({ admin: delegate, oftStore }, eid) // delegate
+            )
+        }
+
+        const isReceiveLibraryInitialized = await this.isReceiveLibraryInitialized(eid)
+        if (!isReceiveLibraryInitialized) {
+            instructions.push(
+                oft.initReceiveLibrary({ admin: delegate, oftStore }, eid) // delegate
+            )
+        }
+
+        instructions.push(
+            await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
+            await this._setPeerFeeBpsIx(eid), // admin
+            oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer), // delegate
+            await this._createSetPeerAddressIx(normalizedPeer, eid) // admin but is this needed?  set twice...
+        )
+
+        this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
+        return {
+            ...(await this.createTransaction(this._umiToWeb3Tx(instructions))),
+            description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32} ${delegate.publicKey} ${(await this._getAdmin()).publicKey}`,
+        }
     }
 }
