@@ -96,6 +96,6 @@ forge script script/Bridge.s.sol:BridgeScript \
     --rpc-url $RPC_URL \
     --account $account \
     -vvv \
-    --sig "bridge(uint16,address,address,address,uint16,bytes,uint256)" \
+    --sig "bridge(uint16,address,address,address,uint16,bytes32,uint256)" \
     $FROM_EID $BRIDGE_ADDRESS $FROM_OHM $FROM_MINTER $TO_EID $TO_BYTES $amount \
     $BROADCAST_FLAG
