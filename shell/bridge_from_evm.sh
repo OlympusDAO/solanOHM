@@ -41,19 +41,39 @@ if [ -z "$TO_EID" ]; then
     exit 1
 fi
 
-# Determine the source EID
+# Get the FROM_EID from the environment
+FROM_EID=$(jq -r ".${network}.ethereum.eid" env.json)
+if [ -z "$FROM_EID" ]; then
+    display_error "Error: eid is not set for network $network"
+    exit 1
+fi
+
+# Get the FROM_OHM from the environment
+FROM_OHM=$(jq -r ".${network}.ethereum.token" env.json)
+if [ -z "$FROM_OHM" ]; then
+    display_error "Error: token is not set for network $network"
+    exit 1
+fi
+
+# Get the FROM_MINTER from the environment
+FROM_MINTER=$(jq -r ".${network}.ethereum.minter" env.json)
+if [ -z "$FROM_MINTER" ]; then
+    display_error "Error: minter is not set for network $network"
+    exit 1
+fi
+
+# Get the bridge address from the environment
+BRIDGE_ADDRESS=$(jq -r ".${network}.ethereum.bridge" env.json)
+if [ -z "$BRIDGE_ADDRESS" ]; then
+    display_error "Error: bridge is not set for network $network"
+    exit 1
+fi
+
+# Determine the RPC URL
 if [ "$network" == "devnet" ]; then
-    BRIDGE_ADDRESS="0x953E1F2AF5D51Bbf28aD96659B49efd9fa06E34a"
-    FROM_OHM="0x75201BC8207fb06bFEc6CD0AbA99451320aa8e89"
-    FROM_MINTER="0x09F317888a27E14bBFb78Ea53B89De3c23e617BB"
     RPC_URL="https://gateway.tenderly.co/public/sepolia"
-    FROM_EID=10161
 elif [ "$network" == "mainnet" ]; then
-    BRIDGE_ADDRESS="0x45e563c39cDdbA8699A90078F42353A57509543a"
-    FROM_OHM="0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5"
-    FROM_MINTER="0xa90bFe53217da78D900749eb6Ef513ee5b6a491e"
     RPC_URL="https://eth.llamarpc.com"
-    FROM_EID=101
 else
     display_error "Invalid network: $network"
     exit 1

@@ -230,14 +230,12 @@ Currently, the update authority of the token will rename with the deployer. Ther
 
 This script will work on testnets, assuming that the `cast` account provided has the `"bridge_admin"` role. Mainnet/production deployments will need an OCG proposal or MS batch to perform this.
 
-### Call `setDstMinGas`
+### Enable EVM Bridge
 
-TODO needed?
-
-The script will set it to the default value of `1`, which is all that's needed in order to bypass gas assertion.
+If a new testnet deployment, the EVM bridge needs to be explicitly enabled.
 
 ```bash
-npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
+./shell/enable_evm.sh --network <devnet|mainnet> --account <cast account> --broadcast <true|false>
 ```
 
 ### Sending Tokens

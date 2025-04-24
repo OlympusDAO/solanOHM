@@ -4,7 +4,19 @@ pragma solidity 0.8.22;
 interface ICrossChainBridge {
     function sendOhm(uint16 dstChainId_, address to_, uint256 amount_) external payable;
 
-    function sendOhm(uint16 dstChainId_, bytes32 to_, uint256 amount_) external payable;
+    function sendOhm(
+        uint16 dstChainId_,
+        address to_,
+        uint256 amount_,
+        bytes memory adapterParams_
+    ) external payable;
+
+    function sendOhm(
+        uint16 dstChainId_,
+        bytes32 to_,
+        uint256 amount_,
+        bytes memory adapterParams_
+    ) external payable;
 
     function estimateSendFee(
         uint16 dstChainId_,
@@ -31,4 +43,6 @@ interface ICrossChainBridge {
     function setTrustedRemote(uint16 srcChainId_, bytes calldata path_) external;
 
     function setTrustedRemoteAddress(uint16 remoteChainId_, bytes calldata remoteAddress_) external;
+
+    function setBridgeStatus(bool isActive_) external;
 }

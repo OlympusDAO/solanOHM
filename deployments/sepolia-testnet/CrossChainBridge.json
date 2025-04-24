@@ -1,5 +1,5 @@
 {
-  "address": "0x953E1F2AF5D51Bbf28aD96659B49efd9fa06E34a",
+  "address": "0x835D8a0121785BA657c12C66498fa74E08cCeff0",
   "abi": [
     {
       "type": "constructor",
@@ -13,6 +13,11 @@
           "name": "endpoint_",
           "type": "address",
           "internalType": "address"
+        },
+        {
+          "name": "defaultMinDstGas_",
+          "type": "uint256",
+          "internalType": "uint256"
         }
       ],
       "stateMutability": "nonpayable"
@@ -42,6 +47,24 @@
         }
       ],
       "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "VERSION",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "major",
+          "type": "uint8",
+          "internalType": "uint8"
+        },
+        {
+          "name": "minor",
+          "type": "uint8",
+          "internalType": "uint8"
+        }
+      ],
+      "stateMutability": "pure"
     },
     {
       "type": "function",
@@ -84,6 +107,37 @@
     },
     {
       "type": "function",
+      "name": "defaultAdapterParams",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "version",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultMinDstGas",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "estimateSendFee",
       "inputs": [
         {
@@ -95,6 +149,45 @@
           "name": "to_",
           "type": "address",
           "internalType": "address"
+        },
+        {
+          "name": "amount_",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "adapterParams_",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "nativeFee",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "zroFee",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "estimateSendFee",
+      "inputs": [
+        {
+          "name": "dstChainId_",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "to_",
+          "type": "bytes32",
+          "internalType": "bytes32"
         },
         {
           "name": "amount_",
@@ -251,7 +344,7 @@
       ],
       "outputs": [
         {
-          "name": "",
+          "name": "isTrusted",
           "type": "bool",
           "internalType": "bool"
         }
@@ -267,19 +360,6 @@
           "name": "",
           "type": "address",
           "internalType": "contract Kernel"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "lzEndpoint",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "address",
-          "internalType": "contract ILayerZeroEndpoint"
         }
       ],
       "stateMutability": "view"
@@ -311,6 +391,30 @@
       ],
       "outputs": [],
       "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "minDstGasLookup",
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "",
+          "type": "uint16",
+          "internalType": "uint16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
     },
     {
       "type": "function",
@@ -444,6 +548,62 @@
     },
     {
       "type": "function",
+      "name": "sendOhm",
+      "inputs": [
+        {
+          "name": "dstChainId_",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "to_",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "amount_",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "adapterParams_",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "sendOhm",
+      "inputs": [
+        {
+          "name": "dstChainId_",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "to_",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount_",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "adapterParams_",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
       "name": "setBridgeStatus",
       "inputs": [
         {
@@ -478,6 +638,60 @@
           "name": "config_",
           "type": "bytes",
           "internalType": "bytes"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultAdapterParams",
+      "inputs": [
+        {
+          "name": "version_",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "value_",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultMinDstGas",
+      "inputs": [
+        {
+          "name": "minDstGas_",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setMinDstGas",
+      "inputs": [
+        {
+          "name": "dstChainId_",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "packetType_",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "minDstGas_",
+          "type": "uint256",
+          "internalType": "uint256"
         }
       ],
       "outputs": [],
@@ -642,6 +856,25 @@
     },
     {
       "type": "event",
+      "name": "DefaultAdapterParamsSet",
+      "inputs": [
+        {
+          "name": "version_",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        },
+        {
+          "name": "value_",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "MessageFailed",
       "inputs": [
         {
@@ -710,6 +943,19 @@
     },
     {
       "type": "event",
+      "name": "SetDefaultMinDstGas",
+      "inputs": [
+        {
+          "name": "minDstGas_",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "SetMinDstGas",
       "inputs": [
         {
@@ -719,7 +965,7 @@
           "internalType": "uint16"
         },
         {
-          "name": "type_",
+          "name": "packetType_",
           "type": "uint16",
           "indexed": false,
           "internalType": "uint16"
@@ -797,6 +1043,16 @@
     {
       "type": "error",
       "name": "Bridge_InsufficientAmount",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Bridge_InsufficientGasLimit",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Bridge_InvalidAdapterParams",
       "inputs": []
     },
     {

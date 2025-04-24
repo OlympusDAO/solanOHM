@@ -36,7 +36,7 @@ contract BridgeScript is Script {
 
         // Bridge
         vm.startBroadcast();
-        bridgeContract.sendOhm{ value: nativeFee }(toChainId_, toAddress_, amount_);
+        bridgeContract.sendOhm{ value: nativeFee }(toChainId_, toAddress_, amount_, "");
         vm.stopBroadcast();
 
         console2.log("Bridge complete");

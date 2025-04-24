@@ -153,4 +153,10 @@ contract ConfigureCrossChainBridge is Script {
         ICrossChainBridge(localBridge_).setTrustedRemoteAddress(remoteChainId_, remoteBridge_);
         vm.stopBroadcast();
     }
+
+    function enableBridge(address bridge_) external {
+        vm.startBroadcast();
+        ICrossChainBridge(bridge_).setBridgeStatus(true);
+        vm.stopBroadcast();
+    }
 }
